@@ -50,7 +50,7 @@ class Ui_Form(object):
         font.setPointSize(10)
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
-        self.type_coff = QtWidgets.QLineEdit(Form)
+        self.type_coff = QtWidgets.QComboBox(Form)
         self.type_coff.setGeometry(QtCore.QRect(150, 100, 291, 20))
         self.type_coff.setObjectName("type_coff")
         self.label_5 = QtWidgets.QLabel(Form)

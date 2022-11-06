@@ -15,6 +15,11 @@ class New_coffee(QWidget, Ui_Form):
         self.save_btn.clicked.connect(self.save_coffee)
         self.tableWidget.itemChanged.connect(self.item_changed)
         self.modified = {}
+        con = sqlite3.connect('./data/coffee.sqlite')
+        cursor = con.cursor()
+        types = cursor.execute(f"""SELECT name FROM types """).fetchall()
+        for name in types:
+            self.type_coff.addItem(str(name[0]))
         self.titles = None
 
     def new_coffee(self):
@@ -22,19 +27,19 @@ class New_coffee(QWidget, Ui_Form):
         cursor = con.cursor()
         name = self.name_coff.text()
         deg = self.degree_of_roasting_coff.text()
-        typecoff = self.type_coff.text()
+        typecoff1 = self.type_coff.currentText()
+        typecoff = cursor.execute(f"""SELECT id FROM types WHERE name='{typecoff1}'""").fetchall()[0]
         taste = self.taste_coff.text()
         price = self.price_coff.text()
         valume = self.volume_coff.text()
         try:
             assert name != ''
             assert deg != '' and deg.isdigit()
-            assert typecoff != '' and typecoff.isalpha()
             assert taste != ''
             assert price != '' and price.isdigit()
             assert valume != '' and valume.isdigit()
             zapr = f"""INSERT INTO coffee(name, degree_of_roasting, type, taste, price, volume) 
-            VALUES('{name}', '{deg}', '{typecoff}', '{taste}', '{price}', '{valume}')"""
+            VALUES('{name}', '{deg}', '{typecoff[0]}', '{taste}', '{price}', '{valume}')"""
             cursor.execute(zapr)
             self.mistake.setText('Запись успешно добавлен.')
             con.commit()
